@@ -1,31 +1,35 @@
 import numpy as np
 from collections import deque
 
+# === 1) Load dataset ===
 dataset = np.load(r'dataset/traffic_dataset_13_smoothen.npy', allow_pickle=True)
 T_total, E, C_origin = dataset.shape
 
 day_steps = 480
 week_steps = day_steps * 7
 
-# 주어지는 정보, converted node, edge, adj
+# (The dataset was generated using notebooks in the dataset_generation directory)
 
+# === 2) Node and edge definitions (preprocessed) ===
 converted_nodes = [{'id': 0, 'type': 'H', 'coords': (10, 10)}, {'id': 1, 'type': 'I', 'coords': (5, 8)}, {'id': 2, 'type': 'S', 'coords': (7, 2)}, {'id': 3, 'type': 'C', 'coords': (6, 0)}, {'id': 4, 'type': 'S', 'coords': (2, 7)}, {'id': 5, 'type': 'C', 'coords': (5, 0)}, {'id': 6, 'type': 'S', 'coords': (2, 2)}, {'id': 7, 'type': 'I', 'coords': (4, 9)}, {'id': 8, 'type': 'O', 'coords': (1, 1)}, {'id': 9, 'type': 'C', 'coords': (5, 1)}, {'id': 10, 'type': 'R', 'coords': (7, 1)}, {'id': 11, 'type': 'R', 'coords': (9, 3)}, {'id': 12, 'type': 'I', 'coords': (4, 8)}, {'id': 13, 'type': 'S', 'coords': (7, 7)}, {'id': 14, 'type': 'C', 'coords': (8, 4)}, {'id': 15, 'type': 'O', 'coords': (2, 1)}, {'id': 16, 'type': 'R', 'coords': (8, 1)}, {'id': 17, 'type': 'R', 'coords': (8, 2)}, {'id': 18, 'type': 'C', 'coords': (1, 3)}, {'id': 19, 'type': 'R', 'coords': (9, 4)}]
 converted_edges = [{'start': 0, 'end': 7, 'distance': 12.165525060596439, 'road_type': 'urban'}, {'start': 7, 'end': 0, 'distance': 12.165525060596439, 'road_type': 'urban'}, {'start': 1, 'end': 12, 'distance': 2.0, 'road_type': 'urban'}, {'start': 12, 'end': 1, 'distance': 2.0, 'road_type': 'urban'}, {'start': 2, 'end': 6, 'distance': 10.0, 'road_type': 'highway'}, {'start': 6, 'end': 2, 'distance': 10.0, 'road_type': 'highway'}, {'start': 2, 'end': 13, 'distance': 10.0, 'road_type': 'highway'}, {'start': 13, 'end': 2, 'distance': 10.0, 'road_type': 'highway'}, {'start': 2, 'end': 17, 'distance': 2.0, 'road_type': 'urban'}, {'start': 17, 'end': 2, 'distance': 2.0, 'road_type': 'urban'}, {'start': 3, 'end': 5, 'distance': 2.0, 'road_type': 'urban'}, {'start': 5, 'end': 3, 'distance': 2.0, 'road_type': 'urban'}, {'start': 4, 'end': 6, 'distance': 10.0, 'road_type': 'highway'}, {'start': 6, 'end': 4, 'distance': 10.0, 'road_type': 'highway'}, {'start': 4, 'end': 7, 'distance': 5.656854249492381, 'road_type': 'urban'}, {'start': 7, 'end': 4, 'distance': 5.656854249492381, 'road_type': 'urban'}, {'start': 4, 'end': 13, 'distance': 10.0, 'road_type': 'highway'}, {'start': 13, 'end': 4, 'distance': 10.0, 'road_type': 'highway'}, {'start': 5, 'end': 6, 'distance': 7.211102550927978, 'road_type': 'urban'}, {'start': 6, 'end': 5, 'distance': 7.211102550927978, 'road_type': 'urban'}, {'start': 5, 'end': 9, 'distance': 2.0, 'road_type': 'urban'}, {'start': 9, 'end': 5, 'distance': 2.0, 'road_type': 'urban'}, {'start': 5, 'end': 15, 'distance': 6.324555320336759, 'road_type': 'urban'}, {'start': 15, 'end': 5, 'distance': 6.324555320336759, 'road_type': 'urban'}, {'start': 5, 'end': 17, 'distance': 7.211102550927978, 'road_type': 'urban'}, {'start': 17, 'end': 5, 'distance': 7.211102550927978, 'road_type': 'urban'}, {'start': 6, 'end': 15, 'distance': 2.0, 'road_type': 'urban'}, {'start': 15, 'end': 6, 'distance': 2.0, 'road_type': 'urban'}, {'start': 6, 'end': 18, 'distance': 2.8284271247461903, 'road_type': 'urban'}, {'start': 18, 'end': 6, 'distance': 2.8284271247461903, 'road_type': 'urban'}, {'start': 7, 'end': 12, 'distance': 2.0, 'road_type': 'urban'}, {'start': 12, 'end': 7, 'distance': 2.0, 'road_type': 'urban'}, {'start': 8, 'end': 15, 'distance': 2.0, 'road_type': 'urban'}, {'start': 15, 'end': 8, 'distance': 2.0, 'road_type': 'urban'}, {'start': 10, 'end': 16, 'distance': 2.0, 'road_type': 'urban'}, {'start': 16, 'end': 10, 'distance': 2.0, 'road_type': 'urban'}, {'start': 10, 'end': 17, 'distance': 2.8284271247461903, 'road_type': 'urban'}, {'start': 17, 'end': 10, 'distance': 2.8284271247461903, 'road_type': 'urban'}, {'start': 11, 'end': 19, 'distance': 2.0, 'road_type': 'urban'}, {'start': 19, 'end': 11, 'distance': 2.0, 'road_type': 'urban'}, {'start': 13, 'end': 14, 'distance': 6.324555320336759, 'road_type': 'urban'}, {'start': 14, 'end': 13, 'distance': 6.324555320336759, 'road_type': 'urban'}, {'start': 14, 'end': 17, 'distance': 4.0, 'road_type': 'urban'}, {'start': 17, 'end': 14, 'distance': 4.0, 'road_type': 'urban'}, {'start': 14, 'end': 18, 'distance': 14.142135623730951, 'road_type': 'urban'}, {'start': 18, 'end': 14, 'distance': 14.142135623730951, 'road_type': 'urban'}, {'start': 14, 'end': 19, 'distance': 2.0, 'road_type': 'urban'}, {'start': 19, 'end': 14, 'distance': 2.0, 'road_type': 'urban'}, {'start': 15, 'end': 17, 'distance': 12.165525060596439, 'road_type': 'urban'}, {'start': 17, 'end': 15, 'distance': 12.165525060596439, 'road_type': 'urban'}]
 
-# --- 2) edge_idx_map 자동 생성 ---
-# (u,v) 튜플 → 유니크 edge id
+# === 3) edge_idx_map ===
+# Map (u, v) tuple to unique edge ID
 edge_idx_map = {
     (e['start'], e['end']): idx
     for idx, e in enumerate(converted_edges)
 }
 
-# --- 3) node_idx_map (id→(u,v) 튜플) 자동 생성 ---
+# === 4) node_idx_map ===
+# Automatically generate mapping: edge ID → (u, v) tuple
 node_idx_map = {
     idx: uv
     for uv, idx in edge_idx_map.items()
 }
 
-# --- 4) edge_adj_mat 계산 ---
+# === 5) edge_adj_mat ===
+# Adjacency matrix between edges (E x E)
 edge_adj_mat = np.zeros((len(edge_idx_map), len(edge_idx_map)))
 
 for edge_info in edge_idx_map:
@@ -40,10 +44,11 @@ for edge_info in edge_idx_map:
             edge_adj_mat[ID,id] = 1
 np.fill_diagonal(edge_adj_mat, 0.0)
 
-# --- 5) edge degree 리스트 계산 ---
+# === 6) edge_degree_list ===
+# Edge degree list (number of neighboring edges)
 edge_degree_list = edge_adj_mat.sum(axis=1).astype(int)  # shape (E,)
 
-# --- 6) edge-edge shortest-path 거리(edge_spd) 계산 함수 ---
+# === 7) edge_spd: Edge-to-edge shortest path distance ===
 def _compute_spd(adj: np.ndarray) -> np.ndarray:
     E = adj.shape[0]
     spd = np.full((E, E), -1, dtype=int)
@@ -64,12 +69,14 @@ def _compute_spd(adj: np.ndarray) -> np.ndarray:
 edge_spd = _compute_spd(edge_adj_mat)
 
 
-# 1) edge_index: shape (2, E)
+# === 8) edge_index ===
+# shape: (2, E), source and destination node indices for each edge
 starts = np.array([e['start'] for e in converted_edges], dtype=np.int64)
 ends   = np.array([e['end']   for e in converted_edges], dtype=np.int64)
 edge_index = np.stack([starts, ends], axis=0)  # (2, E)
 
-# 2) edge_attr: shape (E, F_e)
+# === 9) edge_attr ===
+# shape: (E, F_e), edge features (distance + one-hot encoded road type)
 distances = np.array([e['distance'] for e in converted_edges], dtype=np.float32)
 road_types = [e['road_type'] for e in converted_edges]
 type_to_idx = {t:i for i,t in enumerate(sorted(set(road_types)))}
