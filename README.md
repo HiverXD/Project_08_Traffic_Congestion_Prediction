@@ -31,7 +31,7 @@ This project addresses these challenges by:
     * **SPE (Structural Position Embedding) bias** facilitates rapid learning of global relationships between functionally similar nodes.
     * Achieves high computational efficiency and faster convergence by reducing parameter count while incorporating meaningful spatial structures.
 
-![edge_prediction](/Project_08_Traffic_Congestion_Prediction/figures/edge_04_prediction.png)
+![benchmark_test](/Project_08_Traffic_Congestion_Prediction/figures/benchmark_test.png)
 
 * **Faster Training Convergence**:
     * The explicit incorporation of graph structural information as an inductive bias into the attention mechanism enables the model to update parameters more accurately from the early stages of training.
@@ -39,6 +39,8 @@ This project addresses these challenges by:
 * **Comprehensive Model Evaluation**:
     * Includes a `Trainer` class and performance index calculation utilities (`calculate_performance_index.py`) for systematic model training and evaluation.
     * Supports hyperparameter tuning (`hyperparameter_tuning.ipynb`) to optimize model performance.
+
+![edge_prediction](/Project_08_Traffic_Congestion_Prediction/figures/edge_04_prediction.png)
 
 ---
 
@@ -53,8 +55,6 @@ The repository is organized as follows:
 │   ├── 01_graph_preprocessing.ipynb      # Preprocessing graph data
 │   ├── 02_vehicle_environment_test.ipynb # Test vehicle movement within the simulated environment
 │   └── ...                               # Other dataset generation/analysis notebooks
-├── model_build/                      # Notebooks for initial model prototyping
-│   └── model_prototype_with_aux.ipynb    # Prototype of models including auxiliary networks
 ├── src/                              # Main source code for models, training, and utilities
 │   ├── dataset/                      # Dataset handling and configuration
 │   │   ├── dataset_config.py
