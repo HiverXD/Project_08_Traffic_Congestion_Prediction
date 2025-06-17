@@ -22,11 +22,17 @@ This project addresses these challenges by:
     * Generates spatio-temporal traffic volume data represented as graphs (intersections/points as nodes, roads as edges).
     * Supports flexible additions and extensions of traffic patterns (e.g., rush hour, daily/weekly variations).
     * Data is stored in `numpy` format for easy modification, loading, and visualization.
+
+![dataset_gif](/Project_08_Traffic_Congestion_Prediction/figures/dataset.gif)
+
 * **STLinear Model with Structural Attention Bias**:
     * Combines a Linear-based temporal processing module with **structural Attention Bias (Hop-biased and SPE)**.
     * **Hop-biased bias** accelerates information propagation between adjacent nodes.
     * **SPE (Structural Position Embedding) bias** facilitates rapid learning of global relationships between functionally similar nodes.
     * Achieves high computational efficiency and faster convergence by reducing parameter count while incorporating meaningful spatial structures.
+
+![edge_prediction](/Project_08_Traffic_Congestion_Prediction/figures/edge_04_prediction.png)
+
 * **Faster Training Convergence**:
     * The explicit incorporation of graph structural information as an inductive bias into the attention mechanism enables the model to update parameters more accurately from the early stages of training.
     * This leads to improved convergence speed and better initial performance compared to traditional baselines.
@@ -55,7 +61,7 @@ The repository is organized as follows:
 │   │   └── traffic_dataset.py
 │   ├── models/                       # Implementations of various spatio-temporal prediction models
 │   │   ├── STLinear.py
-│   │   ├── STLinear_deriven.py       # Derived STLinear model (proposed)
+│   │   ├── STLinear_biased_models.py # Derived STLinear model (proposed)
 │   │   └── ...                       # Other baseline and custom models
 │   ├── utils/                        # Utility functions for training, evaluation, and visualization
 │   │   ├── Trainer.py
@@ -83,8 +89,8 @@ The repository is organized as follows:
 
 1.  Clone the repository:
     ```bash
-    git clone [https://github.com/your_username/traffic-congestion-prediction.git](https://github.com/your_username/traffic-congestion-prediction.git)
-    cd traffic-congestion-prediction
+    git clone [https://github.com/HiverXD/Project_08_Traffic_Congestion_Prediction.git](https://github.com/HiverXD/Project_08_Traffic_Congestion_Prediction.git)
+    cd Project_08_Traffic_Congestion_Prediction
     ```
 2.  Install the required packages:
     ```bash
