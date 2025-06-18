@@ -58,7 +58,7 @@ def _compute_spd(adj: np.ndarray) -> np.ndarray:
         q = deque([src])
         while q:
             u = q.popleft()
-            # adj[u] == 1 인 곳이 이웃
+            # adj[u] == 1 means neighbor
             for v, connected in enumerate(adj[u]):
                 if connected and dist[v] == -1:
                     dist[v] = dist[u] + 1

@@ -9,15 +9,16 @@ from .dataset_config import (
     week_steps
 )
 
-# 전역으로 한 번만 변환
+# Convert once globally
 EDGE_INDEX = torch.from_numpy(edge_index).long()
 EDGE_ATTR  = torch.from_numpy(edge_attr).float()
 
 class TrafficDataset(Dataset):
     """
-    PyG Data 객체를 반환.
-    randomize=False: 기존처럼 순서대로,
-    randomize=True: __getitem__마다 self.starts에서 랜덤 샘플링.
+    Returns a PyG Data object.
+    
+    - randomize=False: Sequential sampling (in order)
+    - randomize=True: Random sampling from self.starts in each __getitem__
     """
     def __init__(self, traffic_data, window=12, week_steps=week_steps, randomize=False):
         super().__init__()
@@ -37,13 +38,13 @@ class TrafficDataset(Dataset):
         return len(self.starts)
 
     def __getitem__(self, idx):
-        # 1) t0 결정
+        # 1) determine t0
         if self.randomize:
             t0 = random.choice(self.starts)
         else:
             t0 = self.starts[idx]
 
-        # 2) 과거/미래 인덱스
+        # 2) past/future index
         past_idxs   = np.arange(t0 - self.window + 1, t0 + 1)
         fut_offsets = np.array([3, 6, 12], dtype=np.int64)
         fut_idxs    = t0 + fut_offsets
@@ -52,11 +53,11 @@ class TrafficDataset(Dataset):
         past = self.traffic[past_idxs]   # (T, E, C_all)
         fut  = self.traffic[fut_idxs]    # (n_pred, E, C_all)
 
-        # 4) 채널 0~2: volume, density, flow
+        # 4) channel 0~2: volume, density, flow
         Xp = torch.from_numpy(past[..., :3]).float()  # (T, E, 3)
         Xf = torch.from_numpy(fut[...,  :3]).float()  # (n_pred, E, 3)
 
-        # 5) 시간 특성
+        # 5) time properties
         tod_enc = ((past_idxs % self.day_steps) * 24.0 / self.day_steps).astype(np.float32)
         dow_enc = ((past_idxs // self.day_steps) % 7).astype(np.int64)
         tod_dec = ((fut_idxs   % self.day_steps) * 24.0 / self.day_steps).astype(np.float32)

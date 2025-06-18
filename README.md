@@ -53,8 +53,8 @@ The repository is organized as follows:
 ├── dataset_generation/               # Scripts and notebooks for synthetic traffic dataset generation
 │   ├── 00_random_city_generation.ipynb   # Generate random city layouts for simulation
 │   ├── 01_graph_preprocessing.ipynb      # Preprocessing graph data
-│   ├── 02_vehicle_environment_test.ipynb # Test vehicle movement within the simulated environment
-│   └── ...                               # Other dataset generation/analysis notebooks
+│   ├── 02_generate_dataset.ipynb         # Test vehicle movement within the simulated environment
+│   └── 03_data_analysis.ipynb            # Data analysis and visualization
 ├── src/                              # Main source code for models, training, and utilities
 │   ├── dataset/                      # Dataset handling and configuration
 │   │   ├── dataset_config.py
